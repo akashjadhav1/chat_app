@@ -46,6 +46,7 @@ const handleSubmit =async(e)=>{
         config
       );
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data));
       console.log("Login successful", response.data);
       navigate("chats");
 

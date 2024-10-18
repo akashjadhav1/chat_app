@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Login from "./Login";
 import Signup from "./Signup";
+import { useNavigate } from "react-router-dom";
 
 function Homepage() {
   const [activeTab, setActiveTab] = useState("login");
- 
+ const navigate = useNavigate();
 
   const handleTabClick = (elem) => {
     setActiveTab(elem);
   };
+
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem("user"));
+if(user){
+  navigate("/chats")
+}
+  })
+
+
   return (
     <div className="w-[40%] m-auto mt-4">
       <div className="p-1 bg-white text-black text-center rounded-xl">

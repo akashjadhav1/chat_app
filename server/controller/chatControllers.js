@@ -47,26 +47,28 @@ const accessChat = async(req,res)=>{
 
 
 
-const fetchChats = async(req,res)=>{
+const fetchChats = async (req, res) => {
     try {
-        Chat.find({users:{$elemMatch:{$eq:req.user._id}}})
-        .populate("users","-password")
-        .populate("groupAdmin","-password")
-        .populate("latestMessage")
-        .sort({updatedAt:-1})
-        .then(async (results)=>{
-            results = await User.populate(results,{
-                path:"latestMessage.sender",
-                select:"name pic email"
-            })
+        let chats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+            .populate("latestMessage")
+            .sort({ updatedAt: -1 });
 
-            res.status(200).send(results)
-        })
+        // Populate the sender details of the latestMessage
+        chats = await User.populate(chats, {
+            path: "latestMessage.sender",
+            select: "name pic email",
+        });
+
+        // Send the populated chat data
+        res.status(200).json(chats);
     } catch (error) {
-        res.status(400)
-        throw new Error("error fetching chats",error.message)
+        console.error(error.message); // Log the error for debugging
+        res.status(500).json({ message: "Error fetching chats", error: error.message });
     }
-}
+};
+
 
 
 const createGroupChat = async(req,res)=>{

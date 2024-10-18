@@ -6,7 +6,7 @@ const userRoutes = require('./routes/userRoutes.js');
 const chatRoutes= require('./routes/chatRoutes.js');
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT ||8000;
 
 dotenv.config();
 app.use(cors());

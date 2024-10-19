@@ -2,13 +2,27 @@ import React, { useState } from "react";
 import { ChatState } from "../context/ChatProvider";
 import { getSender, getSenderFull } from "../config/chatLogics";
 import ProfileModel from "./ProfileModel";
+import UpdateGroupChatModal from "./UpdateGroupChatModal";
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat } = ChatState();
   const [showProfile, setShowProfile] = useState(false); // State to toggle profile modal
+  const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false); // State to toggle group chat modal
 
   const handleProfileToggle = () => {
-    setShowProfile(!showProfile); // Toggle the state on clicking the icon
+    setShowProfile(!showProfile); // Toggle profile modal
+  };
+
+  const handleUpdateGroupChatModal = () => {
+    setShowUpdateGroupModal(true); // Show the group chat modal
+  };
+
+  const closeUpdateGroupChatModal = () => {
+    setShowUpdateGroupModal(false); // Hide the group chat modal
+  };
+
+  const closeProfileModal = () => {
+    setShowProfile(false); // Hide the profile modal
   };
 
   return (
@@ -16,7 +30,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       {selectedChat ? (
         <div>
           {!selectedChat.isGroupChat ? (
-            <div className="font-semibold font-mono flex items-center">
+            <div className="font-semibold font-mono flex items-center justify-between">
               {/* Display sender name */}
               {getSender(user, selectedChat.users).toUpperCase()}
 
@@ -38,21 +52,42 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 </svg>
               </button>
 
-              {/* Show the profile modal when icon is clicked */}
+              {/* Show the profile modal when the button is clicked */}
               {showProfile && (
                 <ProfileModel
                   user={getSenderFull(user, selectedChat.users)}
-                  onClose={() => setShowProfile(false)} // Pass a method to close the modal
+                  closeProfileModal={closeProfileModal}
                 />
               )}
             </div>
           ) : (
             <>
-              {selectedChat.chatName.toUpperCase()}
-              {/* Uncomment and implement this when needed */}
-              {/* <UpdateGroupChatModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} /> */}
+              <div className="font-semibold font-mono flex items-center justify-between">
+                <span>{selectedChat.chatName.toUpperCase()}</span>
+                <button
+                  onClick={handleUpdateGroupChatModal}
+                  className="ml-2 text-blue-600"
+                >
+                  See Profile
+                </button>
+              </div>
+
+              {/* Show the update group chat modal */}
+              {showUpdateGroupModal && (
+                <UpdateGroupChatModal
+                  user={user}
+                  closeUpdateGroupChatModal={closeUpdateGroupChatModal}
+                  fetchAgain={fetchAgain}
+                  setFetchAgain={setFetchAgain}
+                />
+              )}
             </>
           )}
+
+          <div className="flex flex-col justify-end p-3 bg-[#E8E8E8] w-[70vw] h-[70vh] rounded-lg overflow-y-hidden">
+            {/* Chat messages will go here */}
+            <input type="text" placeholder="Type here...." className="border-none p-1 rounded" />
+          </div>
         </div>
       ) : (
         <div className="flex items-center justify-center h-[80vh]">

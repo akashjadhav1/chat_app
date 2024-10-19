@@ -3,7 +3,7 @@ import { ChatState } from "../context/ChatProvider";
 import axios from "axios";
 import UserListItem from "./UserListItem";
 
-function GroupChatModel({ children, onClose, groupChatDrawer }) {
+function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
   const { user } = ChatState();
   const [group, setGroup] = useState({
     chatName: "",
@@ -68,7 +68,9 @@ function GroupChatModel({ children, onClose, groupChatDrawer }) {
       );
 
       setChats([data, ...chats]);
+      fetchChats();
       console.log("Group chat created successfully");
+      onClose();
     } catch (error) {
       console.error("Error creating group chat", error);
     }
@@ -104,6 +106,7 @@ function GroupChatModel({ children, onClose, groupChatDrawer }) {
               />
               <input
                 type="text"
+                value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 name="addUser"
                 className="border-2 p-2 border-blue-400 rounded text-sm placeholder:text-gray-400"

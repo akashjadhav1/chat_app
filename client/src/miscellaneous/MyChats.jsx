@@ -44,9 +44,9 @@ function MyChats({fetchAgain}) {
       } md:flex flex-col items-center p-3 bg-white sm:w-[100%] md:w-[31%] rounded-xl border-1 border-black text-black`}
     >
       <div className="pb-3 px-3 text-md font-sans flex w-[100%] justify-between items-center ">
-        <p>My Chats</p>
-        <GroupChatModel onClose={onClose} groupChatDrawer={groupChatDrawer} />
-        <button onClick={onOpenGroupChat} className="flex rounded sm:text-md bg-gray-300 p-1">
+        <p className="text-sm">My Chats</p>
+        <GroupChatModel onClose={onClose} groupChatDrawer={groupChatDrawer} fetchChats={fetchChats} />
+        <button onClick={onOpenGroupChat} className="flex rounded sm:text-md text-sm bg-gray-300 p-1">
           New Group Chat{" "}
           <span>
             <svg
@@ -69,7 +69,7 @@ function MyChats({fetchAgain}) {
       <div className="flex flex-col p-3 bg-[#F8F8F8] w-full h-full rounded overflow-hidden">
         {
           chats?(
-            <div className="">
+            <div className=" overflow-y-auto">
             {
   chats.map((chat) => (
     <div

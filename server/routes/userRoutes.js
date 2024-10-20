@@ -10,4 +10,4 @@ router.post('/register',upload.single('pic'),registerUser);
 router.post('/login',authUser)
 router.get('/',authMiddleware,allUsers)
 
-module.exports = router; 
+module.exports = router;  

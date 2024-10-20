@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectToDatabase = require('./config/database.js');
 const userRoutes = require('./routes/userRoutes.js');
 const chatRoutes= require('./routes/chatRoutes.js');
+const messageRoutes = require('./routes/messageRoutes.js');
 
 const app = express();
 const port = process.env.PORT ||8000;
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoutes);
 app.use('/api/chats', chatRoutes);
+app.use('/api/message', messageRoutes);
 
 app.get("/", (req, res) => {
     res.send("API is running");

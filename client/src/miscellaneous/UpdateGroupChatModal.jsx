@@ -8,7 +8,7 @@ function UpdateGroupChatModal({
   fetchAgain,
   setFetchAgain,
 }) {
-  const { selectedChat, setSelectedChat, user } = ChatState();
+  const { selectedChat, setSelectedChat, user,fetchMessages } = ChatState();
   const [groupChatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -78,6 +78,7 @@ function UpdateGroupChatModal({
       }
 
       setFetchAgain(!fetchAgain); // Refresh the group data
+      fetchMessages();
       closeUpdateGroupChatModal();
       setLoading(false);
 

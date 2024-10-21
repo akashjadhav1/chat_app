@@ -5,6 +5,7 @@ import ProfileModel from "./ProfileModel"; // Corrected the import
 import axios from "axios";
 import LoadingDrawerSekeleton from "../skeleton/LoadingDrawerSekeleton";
 import UserListItem from "./UserListItem";
+import { toast } from "react-toastify";
 
 function SideDrawer() {
   const [search, setSearch] = useState();
@@ -14,6 +15,17 @@ function SideDrawer() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const { user,chats,setChats,setSelectedChat } = ChatState();
+
+  const toastifyConfig = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  }
 
   const handleProfileClick = () => {
     setShowProfileModal(true); // Show modal when "My Profile" is clicked
@@ -37,7 +49,7 @@ function SideDrawer() {
 
   const handleSearch = async () => {
     if (!search) {
-      console.log("Please enter something in search");
+      toast.warning("Please enter something in search",toastifyConfig);
       return;
     }
 
@@ -53,7 +65,7 @@ function SideDrawer() {
       setSearchResult(data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error,toastifyConfig);
       setLoading(false);
     }
   };
@@ -76,7 +88,7 @@ function SideDrawer() {
       setLoadingChat(false);
       closeDrawer();
     } catch (error) {
-      console.log(error);
+      toast.error(error,toastifyConfig);
     }
    
   }
@@ -145,7 +157,7 @@ function SideDrawer() {
                 <li onClick={handleProfileClick}>
                   <a
                     className="block px-6 py-2 hover:bg-gray-100 text-gray-900 font-medium"
-                    href="javascript:;"
+                    href="/"
                   >
                     My Profile
                   </a>

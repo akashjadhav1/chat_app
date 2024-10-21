@@ -1,9 +1,21 @@
-import React, { useState ,useNavigate} from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import showpassword from '../assets/showpassword.svg'
+import hidepassword from '../assets/hidepassword.svg'
+ 
+function Signup({ setActiveTab }) {
+  const toastifyConfig = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  };
 
-
-function Signup({setActiveTab}) {
-  
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -12,6 +24,8 @@ function Signup({setActiveTab}) {
     pic: null, // Store the selected file for image upload
   });
   const [loading, setLoading] = useState(false); // To handle loading state
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State to toggle confirm password visibility
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -40,20 +54,20 @@ function Signup({setActiveTab}) {
       return response.data.url; // Return the URL of the uploaded image
     } catch (error) {
       setLoading(false);
-      console.log("Error uploading image to Cloudinary", error);
+      toast.error("Error uploading image to Cloudinary", toastifyConfig);
       return null;
     }
   };
 
   const handleSignup = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // Check if passwords match and required fields are filled
     if (!data.name || !data.email || !data.password) {
-      console.log("Please fill all the required fields");
+      toast.warning("Please fill all the required fields", toastifyConfig);
       return;
     }
     if (data.password !== data.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.warning("Passwords do not match!", toastifyConfig);
       return;
     }
 
@@ -72,16 +86,12 @@ function Signup({setActiveTab}) {
         pic: imageUrl || "", // Send the Cloudinary image URL if available, else an empty string
       };
 
-      
-      const response = await axios.post(
-        "http://localhost:8000/api/user/register",
-        formData,
-        config
-      );
-      // console.log("Signup successful", response.data);
-      setActiveTab("login")
+      await axios.post("http://localhost:8000/api/user/register", formData, config);
+
+      setActiveTab("login");
+      toast.success("Signup successful", toastifyConfig);
     } catch (error) {
-      console.log("Error on signup request", error.response?.data || error);
+      toast.error("Error on signup request", toastifyConfig);
     }
   };
 
@@ -89,9 +99,7 @@ function Signup({setActiveTab}) {
     <div>
       <div className="flex flex-col justify-center font-[sans-serif] p-2">
         <div className="max-w-md w-full mx-auto border border-gray-300 rounded-2xl p-2">
-          <h2 className="text-gray-800 text-center text-2xl font-bold">
-            Sign up
-          </h2>
+          <h2 className="text-gray-800 text-center text-2xl font-bold">Sign up</h2>
           <form>
             <div className="space-y-2">
               <div>
@@ -105,45 +113,55 @@ function Signup({setActiveTab}) {
                 />
               </div>
               <div>
-                <label className="text-gray-800 text-sm mb-1 block">
-                  Email Id
-                </label>
+                <label className="text-gray-800 text-sm mb-1 block">Email Id</label>
                 <input
                   onChange={handleChange}
                   name="email"
-                  type="email" // Use email type for better validation
+                  type="email"
                   className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2 rounded-md outline-blue-500"
                   placeholder="Enter email"
                 />
               </div>
               <div>
-                <label className="text-gray-800 text-sm mb-1 block">
-                  Password
-                </label>
-                <input
-                  onChange={handleChange}
-                  name="password"
-                  type="password"
-                  className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2 rounded-md outline-blue-500"
-                  placeholder="Enter password"
-                />
+                <label className="text-gray-800 text-sm mb-1 block">Password</label>
+                <div className="relative">
+                  <input
+                    onChange={handleChange}
+                    name="password"
+                    type={showPassword ? "text" : "password"} // Toggle between text and password
+                    className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2 rounded-md outline-blue-500"
+                    placeholder="Enter password"
+                  />
+                  <img
+                    src={showPassword ? showpassword : hidepassword}
+                    alt="show"
+                    className="absolute inset-y-2 w-5 h-5 right-3 text-sm text-gray-600"
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                    
+                 
+                </div>
               </div>
               <div>
-                <label className="text-gray-800 text-sm mb-1 block">
-                  Confirm Password
-                </label>
-                <input
-                  onChange={handleChange}
-                  name="confirmPassword"
-                  type="password"
-                  className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2 rounded-md outline-blue-500"
-                  placeholder="Confirm password"
-                />
+                <label className="text-gray-800 text-sm mb-1 block">Confirm Password</label>
+                <div className="relative">
+                  <input
+                    onChange={handleChange}
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"} // Toggle between text and password
+                    className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2 rounded-md outline-blue-500"
+                    placeholder="Confirm password"
+                  />
+                  <img
+                    src={showConfirmPassword ? showpassword : hidepassword}
+                    alt="show"
+                    className="absolute inset-y-2 w-5 h-5 right-3 text-sm text-gray-600"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  />
+                </div>
               </div>
               <div>
-                <label className="text-gray-800 text-sm mb-1 block">
-                  Upload a picture
-                </label>
+                <label className="text-gray-800 text-sm mb-1 block">Upload a picture</label>
                 <input
                   onChange={handleFileChange}
                   name="pic"
@@ -154,7 +172,7 @@ function Signup({setActiveTab}) {
               </div>
             </div>
 
-            <div className="!mt-6">
+            <div className="mt-6">
               <button
                 onClick={handleSignup}
                 type="button"

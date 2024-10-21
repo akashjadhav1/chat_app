@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../context/ChatProvider"; // Assuming you have a ChatProvider for state management
+import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
@@ -11,6 +12,17 @@ function Login() {
     password: '',
   });
 
+const toastifyConfig = {
+  position: "top-right",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "dark",
+}
+
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
@@ -19,7 +31,7 @@ function Login() {
     e.preventDefault();
 
     if (!loginData.email || !loginData.password) {
-      console.log("Please fill all the required fields");
+      toast.warning("Please fill all the required fields",toastifyConfig);
       return;
     }
 
@@ -47,12 +59,12 @@ function Login() {
 
       // Update the global user state with the response data
       setUser(response.data);
-
+      toast.success("User login successful",toastifyConfig)
       // Navigate to the chats route and pass state
       navigate("/chats", { replace: true });
 
     } catch (error) {
-      console.log("Error on login request", error.response?.data || error);
+      toast.error("Error on login request",toastifyConfig);
     }
   };
 

@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import Login from "./Login";
 import Signup from "./Signup";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
+
+
 
 function Homepage() {
   const [activeTab, setActiveTab] = useState("login");
@@ -48,6 +52,18 @@ if(user){
             : <Signup setActiveTab = {setActiveTab}/>
           }
         </div>
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       </div>
     </div>
   );

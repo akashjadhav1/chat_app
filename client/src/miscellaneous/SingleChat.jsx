@@ -7,7 +7,11 @@ import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import Lottie from "lottie-react"
-import Animation from '../animation/Animation.json'
+import typingAnimation from '../animation/typingAnimation.json'
+import loadingAnimation from "../animation/loadingAnimation.json"
+import { toast } from "react-toastify";
+import showProf from "../assets/hidepassword.svg"
+
 
 const ENDPOINT = "http://localhost:8000";
 let socket, selectedChatCompare;
@@ -40,6 +44,18 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   const closeProfileModal = () => {
     setShowProfile(false); // Hide the profile modal
   };
+
+
+  const toastifyConfig = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  }
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
@@ -88,7 +104,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         setNewMessage(""); // Clear the input after sending the message
         setLoading(false);
       } catch (error) {
-        console.log(error);
+        toast.error(error,toastifyConfig);
         setLoading(false);
       }
     }
@@ -114,7 +130,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
-      console.log(error);
+      toast.error(error,toastifyConfig);
     }
   };
 
@@ -176,25 +192,13 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
               {getSender(user, selectedChat.users).toUpperCase()}
 
               {/* Button to toggle profile modal */}
-              <button
-                onClick={handleProfileToggle}
-                className="ml-2 text-blue-600"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              </button>
+              <img
+              src={showProf}
+              onClick={handleProfileToggle}
+              className="mx-2 text-blue-600 w-6 h-6 cursor-pointer"
+              />
+               
+             
 
               {/* Show the profile modal when the button is clicked */}
               {showProfile && (
@@ -208,12 +212,14 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             <>
               <div className="font-semibold font-mono flex items-center justify-between">
                 <span>{selectedChat.chatName.toUpperCase()}</span>
-                <button
+                <img 
+                  src={showProf}
+                  alt="see profile"
                   onClick={handleUpdateGroupChatModal}
-                  className="ml-2 text-blue-600"
-                >
-                  See Profile
-                </button>
+                  className="mx-3 cursor-pointer text-blue-600 w-6 h-6"
+                />
+                
+                
               </div>
 
               {/* Show the update group chat modal */}
@@ -234,12 +240,17 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             className="flex flex-col justify-end p-3 bg-[#E8E8E8] w-[70vw] h-[70vh] rounded-lg overflow-y-hidden"
           >
             {loading ? (
-              <p>Loading...</p>
+              <Lottie
+                animationData={loadingAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: 70, marginBottom: 15, marginLeft: 0 }}
+              />
             ) : (
               <ScrollableChat messages={messages} /> // Pass messages as a prop
             )}
             {isTyping && <Lottie
-                animationData={Animation}
+                animationData={typingAnimation}
                 loop={true}
                 autoplay={true}
                 style={{ width: 70, marginBottom: 15, marginLeft: 0 }}

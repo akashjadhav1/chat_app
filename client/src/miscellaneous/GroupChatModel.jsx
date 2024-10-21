@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { ChatState } from "../context/ChatProvider";
 import axios from "axios";
 import UserListItem from "./UserListItem";
+import Lottie from "lottie-react";
+import loadingAnimation from '../animation/loadingAnimation.json'
+import { toast } from "react-toastify";
 
 function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
   const { user } = ChatState();
@@ -16,7 +19,17 @@ function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
   const [chats, setChats] = useState([]);
   const [groupChatName, setGroupChatName] = useState("");
 
-  console.log(search);
+  const toastifyConfig = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  }
+ 
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -39,15 +52,16 @@ function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
 
       setLoading(false);
       setSearchResult(data);
+      
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      toast.error(error,toastifyConfig);
     }
   };
 
   const handleSubmit = async () => {
     if (!selectedUsers || !groupChatName) {
-      console.log("Please fill all the fields");
+      toast.warning("Please fill all the fields",toastifyConfig);
       return;
     }
 
@@ -69,16 +83,16 @@ function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
 
       setChats([data, ...chats]);
       fetchChats();
-      console.log("Group chat created successfully");
+      toast.success("Group chat created successfully",toastifyConfig);
       onClose();
     } catch (error) {
-      console.error("Error creating group chat", error);
+      toast.error("Error creating group chat",toastifyConfig);
     }
   };
 
   const handleGroup = (userToAdd) => {
     if (selectedUsers.includes(userToAdd)) {
-      console.log("User already added");
+      toast.error("User already added",toastifyConfig);
       return;
     }
 
@@ -147,7 +161,12 @@ function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
             </div>
 
             {loading ? (
-              <div>Loading...</div>
+              <Lottie
+                animationData={loadingAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: 70, marginBottom: 15, marginLeft: 0 }}
+              />
             ) : (
               searchResult?.slice(0, 4).map((user) => (
                 <UserListItem

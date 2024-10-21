@@ -3,6 +3,10 @@ import { ChatState } from "../context/ChatProvider";
 import UserBadgeItem from "./UserBadgeItem";
 import axios from "axios";
 import UserListItem from "./UserListItem";
+import Lottie from "lottie-react";
+import loadingAnimation from '../animation/loadingAnimation.json'
+import { toast } from "react-toastify";
+
 function UpdateGroupChatModal({
   closeUpdateGroupChatModal,
   fetchAgain,
@@ -15,9 +19,22 @@ function UpdateGroupChatModal({
   const [loading, setLoading] = useState(false);
   const [renameLoading, setRenameLoading] = useState(false);
 
+  const toastifyConfig = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  }
+
+
+
   const handleRenameGroup = async () => {
     if (!groupChatName) {
-      console.log("please select a group");
+      toast.warning("please select a group",toastifyConfig);
       return;
     }
     try {
@@ -41,14 +58,14 @@ function UpdateGroupChatModal({
       setFetchAgain(!fetchAgain);
       setRenameLoading(false);
     } catch (error) {
-      console.log("error", error);
+      toast.error(error,toastifyConfig);
     }
   };
 
   const handleRemoveFromGroup = async (user1) => {
     // Check if the current user is the group admin
     if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
-      console.log("Only admins can remove someone!");
+      toast.warning("Only admins can remove someone!",toastifyConfig);
       return;
     }
 
@@ -81,9 +98,10 @@ function UpdateGroupChatModal({
       fetchMessages();
       closeUpdateGroupChatModal();
       setLoading(false);
+      toast.success("Group chat updated successfully",toastifyConfig)
 
     } catch (error) {
-      console.log("Error in handleRemoveFromGroup:", error);
+      toast.error("Error in handleRemoveFromGroup:",toastifyConfig);
       setLoading(false);
     }
   };
@@ -112,7 +130,7 @@ function UpdateGroupChatModal({
       setSearchResult(data);
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      toast.error(error,toastifyConfig);
     }
   };
 
@@ -148,7 +166,7 @@ function UpdateGroupChatModal({
       setFetchAgain(!fetchAgain); // Trigger a re-fetch
       setLoading(false);
     } catch (error) {
-      console.log("Error in handleAddUser:", error);
+      toast.error(error,toastifyConfig);
       setLoading(false);
     }
   };
@@ -192,7 +210,12 @@ function UpdateGroupChatModal({
         </div>
         <div className="h-[30vh] overflow-y-auto">
           {loading ? (
-            <div>Loading...</div>
+            <Lottie
+                animationData={loadingAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: 70, marginBottom: 15, marginLeft: 0 }}
+              />
           ) : (
             searchResult
               ?.slice(0, 4)

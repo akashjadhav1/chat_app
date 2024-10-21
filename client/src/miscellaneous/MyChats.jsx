@@ -3,11 +3,26 @@ import { ChatState } from "../context/ChatProvider";
 import axios from "axios";
 import { getSender } from "../config/chatLogics";
 import GroupChatModel from "./GroupChatModel";
+import Lottie from "lottie-react";
+import loadingAnimation from "../animation/loadingAnimation.json"
+import { toast } from "react-toastify";
 
 function MyChats({fetchAgain}) {
   const [loggedUser, setLoggedUser] = useState();
   const [groupChatDrawer,setGroupChatDrawer] = useState(false);
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+   
+  const toastifyConfig = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  }
+
 
   const fetchChats = async () => {
     try {
@@ -21,8 +36,9 @@ function MyChats({fetchAgain}) {
         config
       );
       setChats(data);
+      toast.success("fetch toast successfully",toastifyConfig)
     } catch (error) {
-      console.log(error);
+      toast.error(error,toastifyConfig);
     }
   };
 
@@ -87,7 +103,12 @@ function MyChats({fetchAgain}) {
 }
 
             </div>
-          ):<p>Loading</p>
+          ):<Lottie
+                animationData={loadingAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: 70, marginBottom: 15, marginLeft: 0 }}
+              />
         }
       </div>
     </div>

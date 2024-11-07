@@ -135,7 +135,7 @@ function Signup({ setActiveTab }) {
                   <img
                     src={showPassword ? showpassword : hidepassword}
                     alt="show"
-                    className="absolute inset-y-2 w-5 h-5 right-3 text-sm text-gray-600"
+                    className="absolute inset-y-2 w-5 h-5 right-3 text-sm text-gray-600 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
                   />
                     
@@ -155,7 +155,7 @@ function Signup({ setActiveTab }) {
                   <img
                     src={showConfirmPassword ? showpassword : hidepassword}
                     alt="show"
-                    className="absolute inset-y-2 w-5 h-5 right-3 text-sm text-gray-600"
+                    className="absolute inset-y-2 w-5 h-5 right-3 text-sm text-gray-600 cursor-pointer"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   />
                 </div>

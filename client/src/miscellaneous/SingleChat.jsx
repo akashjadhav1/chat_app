@@ -194,6 +194,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
               {/* Button to toggle profile modal */}
               <img
               src={showProf}
+              alt="see profile"
               onClick={handleProfileToggle}
               className="mx-2 text-blue-600 w-6 h-6 cursor-pointer"
               />

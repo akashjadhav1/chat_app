@@ -86,7 +86,7 @@ function Signup({ setActiveTab }) {
         pic: imageUrl || "", // Send the Cloudinary image URL if available, else an empty string
       };
 
-      await axios.post("http://localhost:8000/api/user/register", formData, config);
+      await axios.post("https://chat-app-wybw.onrender.com/api/user/register", formData, config);
 
       setActiveTab("login");
       toast.success("Signup successful", toastifyConfig);

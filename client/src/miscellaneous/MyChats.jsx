@@ -32,7 +32,7 @@ function MyChats({fetchAgain}) {
         },
       };
       const { data } = await axios.get(
-        "http://localhost:8000/api/chats",
+        "https://chat-app-wybw.onrender.com/api/chats",
         config
       );
       setChats(data);

@@ -46,7 +46,7 @@ function UpdateGroupChatModal({
       };
 
       const { data } = await axios.put(
-        "http://localhost:8000/api/chats/rename",
+        "https://chat-app-wybw.onrender.com/api/chats/rename",
         {
           chatId: selectedChat._id,
           chatName: groupChatName,
@@ -79,7 +79,7 @@ function UpdateGroupChatModal({
 
       // API call to remove the user from the group
       const { data } = await axios.put(
-        "http://localhost:8000/api/chats/groupremove",
+        "https://chat-app-wybw.onrender.com/api/chats/groupremove",
         {
           chatId: selectedChat._id,
           userId: user1._id,
@@ -122,7 +122,7 @@ function UpdateGroupChatModal({
       };
 
       const { data } = await axios.get(
-        `http://localhost:8000/api/user?search=${query}`,
+        `https://chat-app-wybw.onrender.com/api/user?search=${query}`,
         config
       );
 
@@ -155,7 +155,7 @@ function UpdateGroupChatModal({
         },
       };
       const { data } = await axios.put(
-        "http://localhost:8000/api/chats/groupadd",
+        "https://chat-app-wybw.onrender.com/api/chats/groupadd",
         {
           chatId: selectedChat._id,
           userId: user1._id,

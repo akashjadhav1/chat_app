@@ -48,7 +48,7 @@ const toastifyConfig = {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/api/user/login",
+        "https://chat-app-wybw.onrender.com/api/user/login",
         formData,
         config
       );

@@ -46,7 +46,7 @@ function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
       };
 
       const { data } = await axios.get(
-        `http://localhost:8000/api/user?search=${query}`,
+        `https://chat-app-wybw.onrender.com/api/user?search=${query}`,
         config
       );
 

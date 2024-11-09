@@ -60,7 +60,7 @@ function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`http://localhost:8000/api/user?search=${search}`, config);
+      const { data } = await axios.get(`https://chat-app-wybw.onrender.com/api/user?search=${search}`, config);
       
       setSearchResult(data);
       setLoading(false);
@@ -81,7 +81,7 @@ function SideDrawer() {
         },
       };
 
-      const {data} = await axios.post("http://localhost:8000/api/chats",{userId},config)
+      const {data} = await axios.post("https://chat-app-wybw.onrender.com/api/chats",{userId},config)
       if(!chats.find((c)=>c._id ===data._id)) 
       setChats([data,...chats])
       setSelectedChat(data);

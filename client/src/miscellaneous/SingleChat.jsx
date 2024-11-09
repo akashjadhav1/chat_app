@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import showProf from "../assets/hidepassword.svg"
 
 
-const ENDPOINT = "http://localhost:8000";
+const ENDPOINT = "https://chat-app-wybw.onrender.com/";
 let socket, selectedChatCompare;
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
@@ -92,7 +92,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         };
 
         const { data } = await axios.post(
-          "http://localhost:8000/api/message",
+          "https://chat-app-wybw.onrender.com/api/message",
           {
             content: newMessage,
             chatId: selectedChat._id,
@@ -123,7 +123,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       };
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:8000/api/message/${selectedChat._id}`,
+        `https://chat-app-wybw.onrender.com/api/message/${selectedChat._id}`,
         config
       );
       setMessages(data);

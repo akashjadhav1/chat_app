@@ -73,7 +73,7 @@ function GroupChatModel({ children, onClose, groupChatDrawer,fetchChats }) {
       };
 
       const { data } = await axios.post(
-        "http://localhost:8000/api/chats/groups",
+        "https://chat-app-wybw.onrender.com/api/chats/groups",
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((u) => u._id)),

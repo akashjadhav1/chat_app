@@ -12,7 +12,7 @@ const port = process.env.PORT ||8000;
 dotenv.config();
 app.use(cors({
     origin: [
-        'https://chat-19ot8k1dr-akashjadhav1s-projects.vercel.app',
+        'https://chat-app-chi-gilt.vercel.app/',
         'http://localhost:3000'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -48,7 +48,7 @@ const io = require("socket.io")(server,{
     pingTimeout:60000,
     cors:{
         origin:[
-            'https://chat-19ot8k1dr-akashjadhav1s-projects.vercel.app',
+            'https://chat-app-chi-gilt.vercel.app/',
             'http://localhost:3000'
         ],
         methods: ['GET', 'POST', 'PUT', 'DELETE']

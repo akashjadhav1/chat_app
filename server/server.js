@@ -15,7 +15,7 @@ app.use(cors({
         'https://chat-19ot8k1dr-akashjadhav1s-projects.vercel.app',
         'http://localhost:3000'
     ],
-    methods: ["GET", "POST"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
 app.use(express.json()); // This is crucial for parsing JSON bodies
@@ -51,7 +51,7 @@ const io = require("socket.io")(server,{
             'https://chat-19ot8k1dr-akashjadhav1s-projects.vercel.app',
             'http://localhost:3000'
         ],
-        methods: ["GET", "POST"]
+        methods: ['GET', 'POST', 'PUT', 'DELETE']
     }
 })
 

@@ -10,7 +10,14 @@ const app = express();
 const port = process.env.PORT ||8000;
 
 dotenv.config();
-app.use(cors());
+app.use(cors({
+    origin: [
+        'https://chat-19ot8k1dr-akashjadhav1s-projects.vercel.app',
+        'http://localhost:3000'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+}));
 app.use(express.json()); // This is crucial for parsing JSON bodies
 app.use(express.urlencoded({ extended: true }));
 

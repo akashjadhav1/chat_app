@@ -14,7 +14,7 @@ function SideDrawer() {
   const [loadingChat, setLoadingChat] = useState();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
-  const { user, chats, setChats, setSelectedChat } = ChatState();
+  const { user,chats,setChats,setSelectedChat } = ChatState();
 
   const toastifyConfig = {
     position: "top-right",
@@ -25,7 +25,7 @@ function SideDrawer() {
     draggable: true,
     progress: undefined,
     theme: "dark",
-  };
+  }
 
   const handleProfileClick = () => {
     setShowProfileModal(true); // Show modal when "My Profile" is clicked
@@ -38,7 +38,6 @@ function SideDrawer() {
   const handleDrawerClick = () => {
     setShowDrawer(true);
   };
-
   const closeDrawer = () => {
     setShowDrawer(false); // Close modal when required
   };
@@ -50,7 +49,7 @@ function SideDrawer() {
 
   const handleSearch = async () => {
     if (!search) {
-      toast.warning("Please enter something in search", toastifyConfig);
+      toast.warning("Please enter something in search",toastifyConfig);
       return;
     }
 
@@ -61,20 +60,18 @@ function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(
-        `https://chat-app-wybw.onrender.com/api/user?search=${search}`,
-        config
-      );
-
+      const { data } = await axios.get(`https://chat-app-wybw.onrender.com/api/user?search=${search}`, config);
+      
       setSearchResult(data);
       setLoading(false);
     } catch (error) {
-      toast.error(error, toastifyConfig);
+      toast.error(error,toastifyConfig);
       setLoading(false);
     }
   };
 
-  const accessChat = async (userId) => {
+
+  const accessChat = async(userId)=>{
     try {
       setLoading(true);
       const config = {
@@ -84,20 +81,17 @@ function SideDrawer() {
         },
       };
 
-      const { data } = await axios.post(
-        "https://chat-app-wybw.onrender.com/api/chats",
-        { userId },
-        config
-      );
-      if (!chats.find((c) => c._id === data._id))
-        setChats([data, ...chats]);
+      const {data} = await axios.post("https://chat-app-wybw.onrender.com/api/chats",{userId},config)
+      if(!chats.find((c)=>c._id ===data._id)) 
+      setChats([data,...chats])
       setSelectedChat(data);
       setLoadingChat(false);
       closeDrawer();
     } catch (error) {
-      toast.error(error, toastifyConfig);
+      toast.error(error,toastifyConfig);
     }
-  };
+   
+  }
 
   useEffect(() => {}, [user]);
 
@@ -181,81 +175,80 @@ function SideDrawer() {
             </div>
           </div>
         </div>
+
+        {/* Conditionally render Profile Modal */}
+        {showProfileModal && (
+          <ProfileModel user={user} closeProfileModal={closeProfileModal} />
+        )}
       </div>
-
-      {/* Conditionally render Profile Modal */}
-      {showProfileModal && (
-        <ProfileModel user={user} closeProfileModal={closeProfileModal} />
-      )}
-
       <div className={`${showDrawer ? "block" : "hidden"}`}>
-        <div className="absolute top-0 w-[24%] text-black">
-          <div className="bg-white h-[100vh] lg:w-[100%] w-[200px] border-2 border-gray-500 rounded shadow-red-600 shadow-xl">
-            <div className="relative">
-              <p className="font-bold text-md text-center mb-4">Search User</p>
-              <div className="absolute inset-y-0 start-2 top-11 flex items-center ps-3 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              </div>
+  <div class="absolute top-0 w-[24%] text-black">
+    <div className="bg-white h-[100vh] lg:w-[100%] w-[200px] border-2 border-gray-500 rounded shadow-red-600 shadow-xl">
+      <div className="relative">
+        <p className="font-bold text-md text-center mb-4">Search User</p>
+        <div className="absolute inset-y-0 start-2 top-11 flex items-center ps-3 pointer-events-none">
+          <svg
+            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+        </div>
 
-              <div className="flex items-center">
-                <input
-                  type="search"
-                  id="default-search"
-                  className="block w-[80%] p-2 mx-2 ps-8 text-sm text-black border hover:bg-gray-200 rounded-lg dark:placeholder-gray-400"
-                  placeholder="Search User"
-                  onChange={(e) => setSearch(e.target.value)}
-                  required
-                />
-                <button
-                  onClick={handleSearch}
-                  className="bg-gray-500 hover:bg-blue-500 text-white px-2 m-1 py-1 rounded-lg ml-0"
-                >
-                  Go
-                </button>
-              </div>
-            </div>
-
-            <div
-              onClick={closeDrawer}
-              className="absolute lg:top-1 top-[-5px] lg:left-[85%] left-[167px] hover:bg-gray-200 w-8 text-center rounded-md"
-            >
-              <button
-                class="close-button"
-                aria-label="Close alert"
-                type="button"
-                data-close
-              >
-                <span aria-hidden="true" className="text-3xl">
-                  &times;
-                </span>
-              </button>
-            </div>
-            <div className="">
-              {loading === true ? (
-                <LoadingDrawerSekeleton />
-              ) : (
-                searchResult?.map((user) => (
-                  <UserListItem key={user._id} user={user} accessChat={accessChat} />
-                ))
-              )}
-            </div>
-          </div>
+        <div className="flex items-center">
+          <input
+            type="search"
+            id="default-search"
+            className="block w-[80%] p-2 mx-2 ps-8 text-sm text-black border hover:bg-gray-200 rounded-lg dark:placeholder-gray-400"
+            placeholder="Search User"
+            onChange={(e)=>setSearch(e.target.value)}
+            required
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-gray-500 hover:bg-blue-500 text-white px-2 m-1 py-1 rounded-lg ml-0"
+          >
+            Go
+          </button>
         </div>
       </div>
+
+      <div
+        onClick={closeDrawer}
+        className="absolute lg:top-1 top-[-5px] lg:left-[85%] left-[167px] hover:bg-gray-200 w-8 text-center rounded-md"
+      >
+        <button
+          class="close-button"
+          aria-label="Close alert"
+          type="button"
+          data-close
+        >
+          <span aria-hidden="true" className="text-3xl">
+            &times;
+          </span>
+        </button>
+      </div>
+      <div className="">
+      {loading===true ? <LoadingDrawerSekeleton/> : (searchResult?.map(user=>(
+        <UserListItem key={user._id} user={user} handleFunction={()=>accessChat(user._id)}>
+
+        </UserListItem>
+      )))}
+      </div>
+     
+    </div>
+  </div>
+</div>
+
     </>
   );
 }

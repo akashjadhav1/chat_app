@@ -3,24 +3,26 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectToDatabase = require('./config/database.js');
 const userRoutes = require('./routes/userRoutes.js');
-const chatRoutes= require('./routes/chatRoutes.js');
+const chatRoutes = require('./routes/chatRoutes.js');
 const messageRoutes = require('./routes/messageRoutes.js');
 
 const app = express();
-const port = process.env.PORT ||8000;
+const port = process.env.PORT || 8000;
 
 dotenv.config();
 app.use(cors({
     origin: [
-        'https://chat-app-chi-gilt.vercel.app/',
+        'https://chat-app-chi-gilt.vercel.app',  // Remove trailing slash
         'http://localhost:3000'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
+
 app.use(express.json()); // This is crucial for parsing JSON bodies
 app.use(express.urlencoded({ extended: true }));
 
+// API Routes
 app.use('/api/user', userRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/message', messageRoutes);
@@ -35,6 +37,7 @@ app.use((err, req, res, next) => {
     res.status(400).json({ message: err.message });
 });
 
+// Start server and connect to the database
 const server = app.listen(port, () => {
     try {
         connectToDatabase();
@@ -44,47 +47,48 @@ const server = app.listen(port, () => {
     }
 });
 
-const io = require("socket.io")(server,{
-    pingTimeout:60000,
-    cors:{
-        origin:[
-            'https://chat-app-chi-gilt.vercel.app/',
+// Socket.io setup with CORS settings
+const io = require("socket.io")(server, {
+    pingTimeout: 60000,
+    cors: {
+        origin: [
+            'https://chat-app-chi-gilt.vercel.app',  // Remove trailing slash
             'http://localhost:3000'
         ],
-        methods: ['GET', 'POST', 'PUT', 'DELETE']
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type'],
+        credentials: true
     }
-})
+});
 
-io.on("connection",(socket)=>{
+io.on("connection", (socket) => {
     console.log("connected to socket.io server");
-    socket.on('setup',(userData)=>{
+
+    socket.on('setup', (userData) => {
         socket.join(userData._id);
         console.log(userData._id);
         socket.emit("connected");
-    })
+    });
 
-    socket.on('join chat',(room)=>{
+    socket.on('join chat', (room) => {
         socket.join(room);
-        console.log("user joined " + room)
-    })
+        console.log("user joined " + room);
+    });
 
-    socket.on('new message',(newMessageRecieved)=>{
+    socket.on('new message', (newMessageRecieved) => {
         let chat = newMessageRecieved.chat;
-        if(!chat.users){
+        if (!chat.users) {
             return;
-            console.log("chat.users not define")
+            console.log("chat.users not defined");
         }
-        chat.users.forEach(user=>{
-            if(user._id == newMessageRecieved.sender._id){
-                return; 
-
-                
+        chat.users.forEach(user => {
+            if (user._id == newMessageRecieved.sender._id) {
+                return;
             }
-            socket.in(user._id).emit('message received', newMessageRecieved)
-        })
-    })
+            socket.in(user._id).emit('message received', newMessageRecieved);
+        });
+    });
 
-    socket.on('typing',(room)=>socket.in(room).emit('typing'))
-    socket.on('stop typing',(room)=>socket.in(room).emit('stop typing'))
-})
- 
+    socket.on('typing', (room) => socket.in(room).emit('typing'));
+    socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
+});

@@ -1,14 +1,16 @@
-import React from 'react'
-import { ChatState } from '../context/ChatProvider'
+import React from 'react';
+import { ChatState } from '../context/ChatProvider';
 import SingleChat from './SingleChat';
 
-function ChatBox({fetchAgain,setFetchAgain}) {
-  const {selectedChat} = ChatState();
+function ChatBox({ fetchAgain, setFetchAgain }) {
+  const { selectedChat } = ChatState();
+
   return (
-    <div className='flex items-center flex-col p-3 mx-2 bg-white w-full rounded-lg border-1 border-black'>
-      <SingleChat fetchAgain={fetchAgain}  setFetchAgain={setFetchAgain}/>
+    <div className="flex items-center flex-col p-3 mx-2 bg-white w-full rounded-lg border-1 border-black 
+      w-[66%] md:w-3/4 lg:w-2/3 xl:w-full">
+      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </div>
-  )
+  );
 }
 
-export default ChatBox
+export default ChatBox;

@@ -128,17 +128,17 @@ function SideDrawer() {
         </div>
 
         <div>
-          <h1 className="text-2xl text-black font-serif">ChatsApp</h1>
+          <h1 className="lg:text-2xl text-xl text-black font-serif">ChatsApp</h1>
         </div>
 
-        <div className="">
-          <div className="dropdown relative inline-flex group">
+        <div className="mx-3 ">
+          <div className="dropdown relative inline-flex group pt-1 lg:mt-0">
             {user.picture ? (
               <img
                 id="dropdown-hover"
                 src={user.picture}
                 alt={user.name}
-                className="dropdown-toggle mx-7 w-10 h-10 rounded-full cursor-pointer bg-white shadow-xs transition-all duration-500 hover:shadow-lg"
+                className="dropdown-toggle lg:mx-7 lg:w-10 lg:h-10 h-8 w-8 rounded-full cursor-pointer bg-white shadow-xs transition-all duration-500 hover:shadow-lg"
               />
             ) : (
               <img

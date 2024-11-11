@@ -6,45 +6,30 @@ import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
-import Lottie from "lottie-react"
-import typingAnimation from '../animation/typingAnimation.json'
-import loadingAnimation from "../animation/loadingAnimation.json"
+import Lottie from "lottie-react";
+import typingAnimation from '../animation/typingAnimation.json';
+import loadingAnimation from "../animation/loadingAnimation.json";
 import { toast } from "react-toastify";
-import showProf from "../assets/hidepassword.svg"
-
+import showProf from "../assets/hidepassword.svg";
 
 const ENDPOINT = "https://chat-app-wybw.onrender.com/";
 let socket, selectedChatCompare;
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
   const { user, selectedChat } = ChatState();
-  const [showProfile, setShowProfile] = useState(false); // State to toggle profile modal
-  const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false); // State to toggle group chat modal
-
+  const [showProfile, setShowProfile] = useState(false);
+  const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleProfileToggle = () => {
-    setShowProfile(!showProfile); // Toggle profile modal
-  };
-
-  const handleUpdateGroupChatModal = () => {
-    setShowUpdateGroupModal(true); // Show the group chat modal
-  };
-
-  const closeUpdateGroupChatModal = () => {
-    setShowUpdateGroupModal(false); // Hide the group chat modal
-  };
-
-  const closeProfileModal = () => {
-    setShowProfile(false); // Hide the profile modal
-  };
-
+  const handleProfileToggle = () => setShowProfile(!showProfile);
+  const handleUpdateGroupChatModal = () => setShowUpdateGroupModal(true);
+  const closeUpdateGroupChatModal = () => setShowUpdateGroupModal(false);
+  const closeProfileModal = () => setShowProfile(false);
 
   const toastifyConfig = {
     position: "top-right",
@@ -53,9 +38,8 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    progress: undefined,
     theme: "dark",
-  }
+  };
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
@@ -90,7 +74,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             Authorization: `Bearer ${user.token}`,
           },
         };
-
         const { data } = await axios.post(
           "https://chat-app-wybw.onrender.com/api/message",
           {
@@ -101,20 +84,17 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         );
         socket.emit("new message", data);
         setMessages((prevMessages) => [...prevMessages, data]);
-        setNewMessage(""); // Clear the input after sending the message
+        setNewMessage("");
         setLoading(false);
       } catch (error) {
-        toast.error(error,toastifyConfig);
+        toast.error(error, toastifyConfig);
         setLoading(false);
       }
     }
   };
 
   const fetchMessages = async () => {
-    if (!selectedChat) {
-      return;
-    }
-
+    if (!selectedChat) return;
     try {
       const config = {
         headers: {
@@ -130,7 +110,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
-      toast.error(error,toastifyConfig);
+      toast.error(error, toastifyConfig);
     }
   };
 
@@ -138,8 +118,8 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-    socket.on("typing", () => setIsTyping(true)); // Set isTyping to true when 'typing' event is received
-    socket.on("stop typing", () => setIsTyping(false)); // Set isTyping to false when 'stop typing' event is received
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
 
     return () => {
       socket.disconnect();
@@ -152,124 +132,48 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       selectedChatCompare = selectedChat;
     }
 
-    // Clean up event listener when component unmounts or chat changes
     return () => {
       socket.off("message received");
     };
   }, [selectedChat]);
 
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on("message received", (newMessageReceived) => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageReceived.chat._id
-      ) {
-        return;
-      } else {
-        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
-      }
-    });
-
-    // Clean up the event listener when component unmounts or chat changes
-    return () => {
-      socket.off("message received");
-    };
-  }, [selectedChatCompare]);
-
-
-
-
-
   return (
-    <div>
+    <div className="flex flex-col items-center w-full lg:max-w-[70vw] p-3 h-full">
       {selectedChat ? (
-        <div>
-          {!selectedChat.isGroupChat ? (
-            <div className="font-semibold font-mono flex items-center justify-between">
-              {/* Display sender name */}
-              {getSender(user, selectedChat.users).toUpperCase()}
-
-              {/* Button to toggle profile modal */}
-              <img
-              src={showProf}
-              alt="see profile"
-              onClick={handleProfileToggle}
-              className="mx-2 text-blue-600 w-6 h-6 cursor-pointer"
-              />
-               
-             
-
-              {/* Show the profile modal when the button is clicked */}
-              {showProfile && (
-                <ProfileModel
-                  user={getSenderFull(user, selectedChat.users)}
-                  closeProfileModal={closeProfileModal}
-                />
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="font-semibold font-mono flex items-center justify-between">
+        <div className="w-full lg:h-[80vh] h-[60vh] flex flex-col">
+          <div className="flex items-center justify-between text-lg font-semibold">
+            {selectedChat.isGroupChat ? (
+              <>
                 <span>{selectedChat.chatName.toUpperCase()}</span>
-                <img 
-                  src={showProf}
-                  alt="see profile"
-                  onClick={handleUpdateGroupChatModal}
-                  className="mx-3 cursor-pointer text-blue-600 w-6 h-6"
-                />
-                
-                
-              </div>
-
-              {/* Show the update group chat modal */}
-              {showUpdateGroupModal && (
-                <UpdateGroupChatModal
-                  user={user}
-                  closeUpdateGroupChatModal={closeUpdateGroupChatModal}
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                  fetchMessages={fetchMessages}
-                />
-              )}
-            </>
-          )}
-
-          <div
-            onKeyDown={sendMessage} // Use onKeyDown instead of onKeyUp
-            className="flex flex-col justify-end p-3 bg-[#E8E8E8] w-[70vw] h-[70vh] rounded-lg overflow-y-hidden"
-          >
-            {loading ? (
-              <Lottie
-                animationData={loadingAnimation}
-                loop={true}
-                autoplay={true}
-                style={{ width: 70, marginBottom: 15, marginLeft: 0 }}
-              />
+                <img src={showProf} alt="Profile" onClick={handleUpdateGroupChatModal} className="cursor-pointer w-5 h-5" />
+              </>
             ) : (
-              <ScrollableChat messages={messages} /> // Pass messages as a prop
+              <>
+                {getSender(user, selectedChat.users).toUpperCase()}
+                <img src={showProf} alt="Profile" onClick={handleProfileToggle} className="cursor-pointer w-5 h-5" />
+              </>
             )}
-            {isTyping && <Lottie
-                animationData={typingAnimation}
-                loop={true}
-                autoplay={true}
-                style={{ width: 70, marginBottom: 15, marginLeft: 0 }}
-              />} {/* Show loading when someone is typing */}
+          </div>
+
+          <div className="flex flex-col justify-end p-3 bg-gray-100 w-full rounded-lg overflow-y-scroll mt-4 h-full">
+            {loading ? (
+              <Lottie animationData={loadingAnimation} style={{ width: 50, margin: "0 auto" }} />
+            ) : (
+              <ScrollableChat messages={messages} />
+            )}
+            {isTyping && <Lottie animationData={typingAnimation} style={{ width: 60, margin: "0 auto" }} />}
             <input
               onChange={typingHandler}
-              value={newMessage} // Bind the input value to state
+              value={newMessage}
               type="text"
-              placeholder="Type here...."
-              className="border-none p-1 rounded"
+              placeholder="Type here..."
+              className="border rounded p-2 mt-2 w-full text-sm"
             />
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-[80vh]">
-          <p className="text-3xl p-3 font-sans">
-            Click On a User to Start Chatting
-          </p>
+        <div className="flex items-center justify-center h-full text-lg">
+          Click on a User to Start Chatting
         </div>
       )}
     </div>

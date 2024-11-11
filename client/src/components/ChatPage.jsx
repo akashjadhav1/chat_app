@@ -16,7 +16,7 @@ useEffect(()=>{
     <div className=''>
    
   {user && <SideDrawer/>}
-      <div className='flex justify-between w-[100%] h-[91.5vh] p-10'>
+      <div className='flex lg:w-[100%] lg:h-[91.5vh] lg:p-10 p-1'>
         {user && <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>}
         {user && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>}
       </div>

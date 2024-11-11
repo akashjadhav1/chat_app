@@ -184,17 +184,17 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             )}
 
             {/* Input Area */}
-            <div className="flex items-center border rounded-lg w-full">
+            <div className="flex items-center border rounded-lg">
               <input
                 onChange={typingHandler}
                 value={newMessage}
                 type="text"
                 placeholder="Type here..."
-                className="p-2 text-sm border-none outline-none rounded-l-lg w-full sm:h-10 sm:text-base"
+                className="p-2 text-sm border-none outline-none rounded-l-lg w-full"
               />
               <button
                 onClick={sendMessage}
-                className="bg-blue-500 lg:w-9 lg:h-9 text-white lg:px-4 px-2 py-2 rounded-r-lg hover:bg-blue-600 transition-colors text-sm font-semibold"
+                className="bg-blue-500  text-white lg:px-4 px-2 py-2 rounded-r-lg hover:bg-blue-600 transition-colors text-sm font-semibold"
               >
                 <img src={send} alt="Send" className="w-5 h-5" />
               </button>

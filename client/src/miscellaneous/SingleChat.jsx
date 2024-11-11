@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../context/ChatProvider";
-import { getSender, getSenderFull } from "../config/chatLogics";
+import { getSender } from "../config/chatLogics";
 import ProfileModel from "./ProfileModel";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import Lottie from "lottie-react";
-import typingAnimation from '../animation/typingAnimation.json';
+import typingAnimation from "../animation/typingAnimation.json";
 import loadingAnimation from "../animation/loadingAnimation.json";
 import { toast } from "react-toastify";
 import showProf from "../assets/hidepassword.svg";
+import send from "../assets/send.svg";
 
 const ENDPOINT = "https://chat-app-wybw.onrender.com/";
 let socket, selectedChatCompare;
@@ -64,7 +65,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   };
 
   const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
+    if ((event.key === "Enter" || event.type === "click") && newMessage) {
       socket.emit("stop typing", selectedChat._id);
       setLoading(true);
       try {
@@ -138,37 +139,66 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   }, [selectedChat]);
 
   return (
-    <div className="flex flex-col items-center w-full lg:max-w-[70vw] p-3 h-full">
+    <div className="flex flex-col items-center w-full h-full lg:max-w-[70vw] p-3">
       {selectedChat ? (
-        <div className="w-full lg:h-[80vh] h-[60vh] flex flex-col">
+        <div className="flex flex-col w-full h-full">
           <div className="flex items-center justify-between text-lg font-semibold">
             {selectedChat.isGroupChat ? (
               <>
                 <span>{selectedChat.chatName.toUpperCase()}</span>
-                <img src={showProf} alt="Profile" onClick={handleUpdateGroupChatModal} className="cursor-pointer w-5 h-5" />
+                <img
+                  src={showProf}
+                  alt="Profile"
+                  onClick={handleUpdateGroupChatModal}
+                  className="cursor-pointer w-5 h-5"
+                />
               </>
             ) : (
               <>
                 {getSender(user, selectedChat.users).toUpperCase()}
-                <img src={showProf} alt="Profile" onClick={handleProfileToggle} className="cursor-pointer w-5 h-5" />
+                <img
+                  src={showProf}
+                  alt="Profile"
+                  onClick={handleProfileToggle}
+                  className="cursor-pointer w-5 h-5"
+                />
               </>
             )}
           </div>
 
+          {/* Chat Area */}
           <div className="flex flex-col justify-end p-3 bg-gray-100 w-full rounded-lg overflow-y-scroll mt-4 h-full">
             {loading ? (
-              <Lottie animationData={loadingAnimation} style={{ width: 50, margin: "0 auto" }} />
+              <Lottie
+                animationData={loadingAnimation}
+                style={{ width: 50, margin: "0 auto" }}
+              />
             ) : (
               <ScrollableChat messages={messages} />
             )}
-            {isTyping && <Lottie animationData={typingAnimation} style={{ width: 60, margin: "0 auto" }} />}
-            <input
-              onChange={typingHandler}
-              value={newMessage}
-              type="text"
-              placeholder="Type here..."
-              className="border rounded p-2 mt-2 w-full text-sm"
-            />
+            {isTyping && (
+              <Lottie
+                animationData={typingAnimation}
+                style={{ width: 60, margin: "0 auto" }}
+              />
+            )}
+
+            {/* Input Area */}
+            <div className="flex items-center border rounded-lg w-full">
+              <input
+                onChange={typingHandler}
+                value={newMessage}
+                type="text"
+                placeholder="Type here..."
+                className="p-2 text-sm border-none outline-none rounded-l-lg w-full sm:h-10 sm:text-base"
+              />
+              <button
+                onClick={sendMessage}
+                className="bg-blue-500 lg:w-9 lg:h-9 text-white lg:px-4 px-2 py-2 rounded-r-lg hover:bg-blue-600 transition-colors text-sm font-semibold"
+              >
+                <img src={send} alt="Send" className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       ) : (

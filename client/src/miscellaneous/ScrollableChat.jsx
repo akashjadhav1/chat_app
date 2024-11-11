@@ -11,7 +11,6 @@ function ScrollableChat({ messages }) {
       {messages &&
         messages.map((m, i) => (
           <div key={m._id} className="message-wrapper flex items-center mb-2">
-            {/* Display avatar if it's the same sender or the last message */}
             {(isSameSender(messages, m, i, user._id) || isLastMessage(messages, i, user._id)) && (
               <div className="mr-2">
                 <img
@@ -22,20 +21,14 @@ function ScrollableChat({ messages }) {
               </div>
             )}
 
-            {/* Display message content, applying new line class for long messages */}
             <span
-  style={{
-    marginLeft: isSameSenderMargin(messages, m, i, user._id),
-    whiteSpace: "pre-wrap", // Ensures wrapping for long text
-    wordWrap: "break-word"   // Breaks words if they exceed container width
-  }}
-  className={`message-content ${
-    m.sender._id === user._id ? "bg-[#BEE3F8] float-right" : "bg-[#B9F5D0]"
-  } max-w-[75%] text-xs p-2 rounded-lg`}
->
-  {m.content}
-</span>
-
+              style={{ marginLeft: isSameSenderMargin(messages, m, i, user._id) }}
+              className={`message-content ${
+                m.sender._id === user._id ? "bg-[#BEE3F8] float-right" : "bg-[#B9F5D0]"
+              } max-w-[75%] sm:max-w-full text-xs p-2 rounded-lg break-words`}
+            >
+              {m.content}
+            </span>
           </div>
         ))}
     </ScrollableFeed>

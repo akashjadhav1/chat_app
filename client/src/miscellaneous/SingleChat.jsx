@@ -167,7 +167,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
           </div>
 
           {/* Chat Area */}
-          <div className="flex flex-col justify-end p-3 bg-gray-100 w-full rounded-lg overflow-y-scroll mt-4 h-full">
+          <div className="flex flex-col justify-end p-3 bg-gray-100 w-full rounded-lg overflow-y-scroll mt-4 h-full max-h-[80vh]">
             {loading ? (
               <Lottie
                 animationData={loadingAnimation}
@@ -205,6 +205,25 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         <div className="flex items-center justify-center h-full text-lg">
           Click on a User to Start Chatting
         </div>
+      )}
+
+      {/* Profile Model */}
+      {showProfile && (
+        <ProfileModel
+          show={showProfile}
+          closeProfileModal={closeProfileModal}
+          selectedChat={selectedChat}
+          user={user}
+        />
+      )}
+
+      {/* Update Group Chat Modal */}
+      {showUpdateGroupModal && (
+        <UpdateGroupChatModal
+          show={showUpdateGroupModal}
+          closeUpdateGroupChatModal={closeUpdateGroupChatModal}
+          selectedChat={selectedChat}
+        />
       )}
     </div>
   );
